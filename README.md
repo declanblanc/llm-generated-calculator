@@ -48,12 +48,19 @@ Build frontend:
 npm run build
 ```
 
-### AWS Amplify notes
+### AWS Amplify deployment
 
-- `frontend/` is deploy-ready as a static React app.
-- The repo includes `amplify.yml` configured to build and publish `frontend/dist`.
-- For production API calls, set an environment variable in Amplify:
-  - `VITE_API_URL=https://<your-api-domain>`
-- The app calls `${VITE_API_URL}/api/calculate` in production.
-- For local dev, Vite proxies `/api/*` to `http://localhost:4000`.
-- `frontend/.env.example` is included to show expected environment variables.
+This repository is configured for a **single Amplify deployment**:
+
+- Amplify builds the frontend from `frontend/`
+- It packages a Node.js compute server that serves both:
+  - the React build (`/`)
+  - API routes (`/api/*`)
+
+How it works:
+
+- Build settings come from `amplify.yml` at the repo root.
+- During the build, `scripts/prepare-amplify-hosting.js` creates `.amplify-hosting/`.
+- The compute runtime uses `backend/src/amplify-server.js`.
+
+For local development, Vite still proxies `/api/*` to `http://localhost:4000`.
